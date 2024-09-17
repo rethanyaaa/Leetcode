@@ -1,0 +1,22 @@
+class Solution {
+  public boolean canJump(int[] nums) {
+    int n = nums.length;
+    boolean dp[] = new boolean[n];
+    dp[n-1] = true; // Last index is always reachable from itself
+
+    for (int i = n - 2; i >= 0; i--) {
+        int steps = nums[i];
+        boolean ans = false;
+        for (int j = i + 1; j <= i + steps && j < n; j++) {
+            if (dp[j]) { // If any position ahead is reachable
+                ans = true;
+                break; // No need to check further once we know it's reachable
+            }
+        }
+        dp[i] = ans; // Set dp[i] based on whether it's reachable
+    }
+
+    return dp[0]; // Return whether index 0 is reachable
+}
+
+}
