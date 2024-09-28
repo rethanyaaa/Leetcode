@@ -1,0 +1,34 @@
+ static final int MAX = 1000;
+    static int dp[][] = new int[MAX][MAX];
+
+    static int eggDrop(int n, int k) {
+        // Initialize current element to -1 if it hasn't been initialized yet
+        if (dp[n][k] == 0) {  // Assuming default is 0 for uninitialized cells
+            dp[n][k] = -1;
+        }
+
+        // Check memoization table before proceeding
+        if (dp[n][k] != -1) {
+            return dp[n][k];
+        }
+
+        // Base cases
+        if (k == 0 || k == 1) {
+            return k;
+        }
+        if (n == 1) {
+            return k;
+        }
+
+        int min = Integer.MAX_VALUE, res;
+
+        // Try dropping from each floor and find the minimum number of attempts in worst case
+        for (int x = 1; x <= k; x++) {
+            res = Math.max(eggDrop(n - 1, x - 1), eggDrop(n, k - x));
+            min = Math.min(res, min);
+        }
+
+        // Store the result in the dp array
+        dp[n][k] = min + 1;
+        return dp[n][k];
+    }
