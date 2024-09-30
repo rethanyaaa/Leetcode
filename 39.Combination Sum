@@ -1,0 +1,22 @@
+ class Solution {
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        List<List<Integer>> res = new ArrayList<>();
+        helper(candidates,0,target,0,new ArrayList<>(),res);
+        return res;
+    }
+
+    public void helper(int candidates[], int sum, int target, int i, List<Integer> comb, List<List<Integer>> res) {
+        if (sum == target) {
+            res.add(new ArrayList<>(comb));
+            return;
+        }
+        if (sum > target || i>= candidates.length) {
+            return;
+        }
+
+        comb.add(candidates[i]);
+        helper(candidates,sum+candidates[i],target,i,comb,res);
+        comb.remove(comb.size()-1);
+        helper(candidates,sum ,target,i+1,comb,res);
+    }
+}
