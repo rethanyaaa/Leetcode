@@ -1,0 +1,50 @@
+import java.util.*;
+
+class Solution {
+    public String repeatLimitedString(String s, int repeatLimit) {
+        // Step 1: Frequency count
+        int[] freq = new int[26];
+        for (char c : s.toCharArray()) {
+            freq[c - 'a']++;
+        }
+        
+        // Step 2: Use a max heap for descending order of characters
+        PriorityQueue<Character> maxHeap = new PriorityQueue<>((a, b) -> b - a);
+        for (int i = 0; i < 26; i++) {
+            if (freq[i] > 0) {
+                maxHeap.add((char) (i + 'a'));
+            }
+        }
+        
+        StringBuilder result = new StringBuilder();
+        
+        // Step 3: Build the result string
+        while (!maxHeap.isEmpty()) {
+            char current = maxHeap.poll();
+            int useCount = Math.min(freq[current - 'a'], repeatLimit); // Use up to repeatLimit times
+            for (int i = 0; i < useCount; i++) {
+                result.append(current);
+            }
+            freq[current - 'a'] -= useCount;
+            
+            if (freq[current - 'a'] > 0) {
+                if (maxHeap.isEmpty()) break; // No other character to use, break the loop
+                
+                // Get the next character to break the sequence
+                char next = maxHeap.poll();
+                result.append(next);
+                freq[next - 'a']--;
+                
+                // Reinsert the next character if it still has remaining count
+                if (freq[next - 'a'] > 0) {
+                    maxHeap.add(next);
+                }
+                
+                // Reinsert the current character since it still has remaining count
+                maxHeap.add(current);
+            }
+        }
+        
+        return result.toString();
+    }
+}
