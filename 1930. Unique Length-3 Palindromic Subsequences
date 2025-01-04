@@ -1,0 +1,37 @@
+import java.util.*;
+
+class Solution {
+    public int countPalindromicSubsequence(String s) {
+        int n = s.length();
+        int[] left = new int[26];
+        int[] right = new int[26];
+        Arrays.fill(left, 0);
+        Arrays.fill(right, 0);
+
+        // Count frequencies of each character in the entire string
+        for (int i = 0; i < n; i++) {
+            right[s.charAt(i) - 'a']++;
+        }
+
+        Set<String> uniquePalindromes = new HashSet<>();
+
+        // Traverse the string to find palindromes
+        for (int i = 0; i < n; i++) {
+            // Current character as the center
+            char center = s.charAt(i);
+            right[center - 'a']--;
+
+            // Check for palindromes
+            for (char c = 'a'; c <= 'z'; c++) {
+                if (left[c - 'a'] > 0 && right[c - 'a'] > 0) {
+                    uniquePalindromes.add("" + c + center + c);
+                }
+            }
+
+            // Update left count
+            left[center - 'a']++;
+        }
+
+        return uniquePalindromes.size();
+    }
+}
