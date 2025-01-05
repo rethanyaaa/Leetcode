@@ -1,0 +1,35 @@
+class Solution {
+    public String shiftingLetters(String s, int[][] shifts) {
+        int n = s.length();
+        int[] netShifts = new int[n + 1]; // Array to calculate range-based shifts
+        
+        // Apply shifts to the netShifts array
+        for (int[] shift : shifts) {
+            int start = shift[0];
+            int end = shift[1];
+            int direction = shift[2];
+            
+            netShifts[start] += (direction == 1) ? 1 : -1;
+            netShifts[end + 1] += (direction == 1) ? -1 : 1;
+        }
+        
+        // Calculate cumulative shifts using prefix sums
+        int shiftValue = 0;
+        for (int i = 0; i < n; i++) {
+            shiftValue += netShifts[i];
+            netShifts[i] = shiftValue;
+        }
+        
+        // Build the result string
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < n; i++) {
+            char currentChar = s.charAt(i);
+            int totalShift = netShifts[i];
+            // Adjust the character based on the total shift
+            int newCharIndex = ((currentChar - 'a' + totalShift) % 26 + 26) % 26;
+            result.append((char) ('a' + newCharIndex));
+        }
+        
+        return result.toString();
+    }
+}
