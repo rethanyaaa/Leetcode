@@ -1,0 +1,35 @@
+import java.util.HashMap;
+
+class Solution {
+    public int numTilePossibilities(String tiles) {
+        HashMap<Character, Integer> freqMap = new HashMap<>();
+        
+        // Count frequency of each tile
+        for (char c : tiles.toCharArray()) {
+            freqMap.put(c, freqMap.getOrDefault(c, 0) + 1);
+        }
+        
+        return backtrack(freqMap);
+    }
+    
+    private int backtrack(HashMap<Character, Integer> freqMap) {
+        int count = 0;
+        
+        for (char key : freqMap.keySet()) {
+            if (freqMap.get(key) > 0) {
+                count++; // Count this sequence
+                
+                // Use this character
+                freqMap.put(key, freqMap.get(key) - 1);
+                
+                // Recur to form more sequences
+                count += backtrack(freqMap);
+                
+                // Backtrack (restore count)
+                freqMap.put(key, freqMap.get(key) + 1);
+            }
+        }
+        
+        return count;
+    }
+}
